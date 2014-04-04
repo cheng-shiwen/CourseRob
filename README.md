@@ -1,0 +1,22 @@
+Course Rob
+=============
+
+A simple python program to rob courses that you expect to get using python urllib.
+
+## Requirements
+
+- [Python Imaging Library (PIL)](http://www.pythonware.com/products/pil/)
+	- The Python Imaging Library (PIL) adds image processing capabilities to your Python interpreter. This library supports many file formats, and provides powerful image processing and graphics capabilities.
+- [Tesseract-OCR](https://code.google.com/p/tesseract-ocr/)
+	- Tesseract is probably the most accurate open source OCR engine available. Combined with the Leptonica Image Processing Library it can read a wide variety of image formats and convert them to text in over 60 languages.
+- [PyTesser](https://code.google.com/p/pytesser/)
+	- PyTesser is an Optical Character Recognition module for Python. It takes as input an image or image file and outputs a string.
+	-  **Attention:** it has added into this project
+
+## Usage
+
+First, modify `account info, academic year and semester` at line 17 to 19 and call function `course_rob()` at line 86 in `courserob.py`.
+
+Then, run command
+
+	python courserob.py
