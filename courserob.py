@@ -40,30 +40,26 @@ def login():
         req = urllib2.Request(post_url, urllib.urlencode(body))
         login_html = urllib2.urlopen(req).read()
 
-        f_out = open("login.html", "w")
-        f_out.write(login_html)
-        f_out.close()
+        # f_out = open("login.html", "w")
+        # f_out.write(login_html)
+        # f_out.close()
 
         if login_success.search(login_html):
             break
 
 def course_rob(course_type, course_number, serial_number):
-    course_url = {
-        "bx": "http://zhjwxk.cic.tsinghua.edu.cn/xkBks.vxkBksXkbBs.do?m=bxSearch&p_xnxq=" + xnxq + "&tokenPriFlag=bx",
-        "xx": "http://zhjwxk.cic.tsinghua.edu.cn/xkBks.vxkBksXkbBs.do?m=xxSearch&p_xnxq=" + xnxq + "&tokenPriFlag=xx",
-        "rx": "http://zhjwxk.cic.tsinghua.edu.cn/xkBks.vxkBksXkbBs.do?m=rxSearch&p_xnxq=" + xnxq + "&tokenPriFlag=rx"
-    }
-    if course_url[course_type] is None:
-        return
+    if course_type not in ["bx", "xx", "rx"]:
+        raise Exception('course_type error')
 
-    course_html = urllib2.urlopen(course_url[course_type]).read()
-    f_out = open(course_type + "_course.html", "w")
-    f_out.write(course_html)
-    f_out.close()
+    course_url = "http://zhjwxk.cic.tsinghua.edu.cn/xkBks.vxkBksXkbBs.do?m=" + course_type + "Search&p_xnxq=" + xnxq + "&tokenPriFlag=" + course_type
+    course_html = urllib2.urlopen(course_url).read()
+    # f_out = open(course_type + "_course.html", "w")
+    # f_out.write(course_html)
+    # f_out.close()
 
-    token_re = re.compile('<input type="hidden" name="token" value="(.*?)">')
-    token_ex = token_re.search(course_html)
-    token_string = token_ex.group(1)
+    token_regex = re.compile('<input type="hidden" name="token" value="(.*?)">')
+    token_match = token_regex.search(course_html)
+    token_string = token_match.group(1)
     print course_type, course_number, serial_number, token_string
 
     course_post_url = 'http://zhjwxk.cic.tsinghua.edu.cn/xkBks.vxkBksXkbBs.do'
@@ -74,9 +70,9 @@ def course_rob(course_type, course_number, serial_number):
     }
     course_req = urllib2.Request(course_post_url, urllib.urlencode(course_body[course_type]))
     course_req _html = urllib2.urlopen(course_req).read()
-    f_out = open(course_type + "_req.html", "w")
-    f_out.write(course_req _html)
-    f_out.close()
+    # f_out = open(course_type + "_req.html", "w")
+    # f_out.write(course_req _html)
+    # f_out.close()
 
 while True:
     login()
