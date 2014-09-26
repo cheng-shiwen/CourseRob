@@ -111,7 +111,7 @@ def rob_course(*course_info):
     # f_out.write(course_html)
     # f_out.close()
 
-    remain_regex = re.compile('>\s*?' + course_number + '</td>[\s\S]*?>' + serial_number + '</td>[\s\S]*?</td>[\s\S]*?>(\d+)</td>')
+    remain_regex = re.compile('>\s*?' + course_number + '</td>\s*?.*?>' + serial_number + '</td>[\s\S]*?</td>\s*?.*?>(\d+)</td>')
     remain_match = remain_regex.search(course_html)
     remain_num = int(remain_match.group(1))
     print 'course remain: ', course_type, course_number, serial_number, remain_num
