@@ -14,22 +14,22 @@ opener.addheaders = [('User-agent', 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/53
 urllib2.install_opener(opener)
 
 # account info, academic year and semester
-username = ""
-password = ""
-xnxq = ""       # e.g. "2013-2014-2"
+username = ''
+password = ''
+xnxq = ''       # e.g. '2013-2014-2'
 
 def login():
-    pic_url = "http://zhjwxk.cic.tsinghua.edu.cn/login-jcaptcah.jpg?captchaflag=login1"
-    post_url = "https://zhjwxk.cic.tsinghua.edu.cn/j_acegi_formlogin_xsxk.do"
-    login_success = re.compile("hitTree")
+    pic_url = 'http://zhjwxk.cic.tsinghua.edu.cn/login-jcaptcah.jpg?captchaflag=login1'
+    post_url = 'https://zhjwxk.cic.tsinghua.edu.cn/j_acegi_formlogin_xsxk.do'
+    login_success = re.compile('hitTree')
 
     while True:
         pic_verify = urllib2.urlopen(pic_url).read();
-        pic_out = open("verify.jpg", "wb")
+        pic_out = open('verify.jpg', 'wb')
         pic_out.write(pic_verify)
         pic_out.close()
 
-        verify_image = Image.open("verify.jpg")
+        verify_image = Image.open('verify.jpg')
         login_code = image_to_string(verify_image)
         login_code = login_code[0:-2]
         login_code = login_code.replace(' ', '')
@@ -40,7 +40,7 @@ def login():
         req = urllib2.Request(post_url, urllib.urlencode(body))
         login_html = urllib2.urlopen(req).read()
 
-        # f_out = open("login.html", "w")
+        # f_out = open('login.html', 'w')
         # f_out.write(login_html)
         # f_out.close()
 
@@ -48,12 +48,15 @@ def login():
             break
 
 def course_rob(course_type, course_number, serial_number):
-    if course_type not in ["bx", "xx", "rx"]:
+    if course_type not in ['bx', 'xx', 'rx', 'xwk']:
         raise Exception('course_type error')
 
-    course_url = "http://zhjwxk.cic.tsinghua.edu.cn/xkBks.vxkBksXkbBs.do?m=" + course_type + "Search&p_xnxq=" + xnxq + "&tokenPriFlag=" + course_type
+    base_url = 'http://zhjwxk.cic.tsinghua.edu.cn/xkBks.vxkBksXkbBs.do' if course_type in ['bx', 'xx', 'rx'] else \
+               'http://zhjwxk.cic.tsinghua.edu.cn/xkYjs.vxkYjsXkbBs.do'
+
+    course_url = base_url + '?m=' + course_type + 'Search&p_xnxq=' + xnxq + '&tokenPriFlag=' + course_type
     course_html = urllib2.urlopen(course_url).read()
-    # f_out = open(course_type + "_course.html", "w")
+    # f_out = open(course_type + '_course.html', 'w')
     # f_out.write(course_html)
     # f_out.close()
 
@@ -62,15 +65,15 @@ def course_rob(course_type, course_number, serial_number):
     token_string = token_match.group(1)
     print course_type, course_number, serial_number, token_string
 
-    course_post_url = 'http://zhjwxk.cic.tsinghua.edu.cn/xkBks.vxkBksXkbBs.do'
     course_body = {
-        "bx": (('m', 'saveBxKc'), ('token', token_string), ('p_xnxq', xnxq), ('tokenPriFlag', 'bx'), ('p_bxk_id', '%s;%s;%s;' % (xnxq, course_number, serial_number))),
-        "xx": (('m', 'saveXxKc'), ('token', token_string), ('p_xnxq', xnxq), ('tokenPriFlag', 'xx'), ('p_xxk_id', '%s;%s;%s;' % (xnxq, course_number, serial_number))),
-        "rx": (('m', 'saveRxKc'), ('token', token_string), ('p_xnxq', xnxq), ('tokenPriFlag', 'rx'), ('p_rx_id', '%s;%s;%s;' % (xnxq, course_number, serial_number)), ('p_sort.asc1', 'true'), ('p_sort.asc2', 'true'))
+        'bx': (('m', 'saveBxKc'), ('token', token_string), ('p_xnxq', xnxq), ('tokenPriFlag', 'bx'), ('p_bxk_id', '%s;%s;%s;' % (xnxq, course_number, serial_number))),
+        'xx': (('m', 'saveXxKc'), ('token', token_string), ('p_xnxq', xnxq), ('tokenPriFlag', 'xx'), ('p_xxk_id', '%s;%s;%s;' % (xnxq, course_number, serial_number))),
+        'rx': (('m', 'saveRxKc'), ('token', token_string), ('p_xnxq', xnxq), ('tokenPriFlag', 'rx'), ('p_rx_id', '%s;%s;%s;' % (xnxq, course_number, serial_number)), ('p_sort.asc1', 'true'), ('p_sort.asc2', 'true')),
+        'xwk': (('m', 'saveXwKc'), ('token', token_string), ('p_xnxq', xnxq), ('tokenPriFlag', 'xwk'), ('p_xwk_id', '%s;%s;%s;' % (xnxq, course_number, serial_number)))
     }
-    course_req = urllib2.Request(course_post_url, urllib.urlencode(course_body[course_type]))
+    course_req = urllib2.Request(base_url, urllib.urlencode(course_body[course_type]))
     course_req _html = urllib2.urlopen(course_req).read()
-    # f_out = open(course_type + "_req.html", "w")
+    # f_out = open(course_type + '_req.html', 'w')
     # f_out.write(course_req _html)
     # f_out.close()
 
