@@ -23,3 +23,5 @@ First, modify `account info, academic year and semester` at line 17 to 20 and ad
 Then, run command
 
     python courserob.py
+
+Or just double-click `courserob.py` in Windows.
