@@ -161,10 +161,12 @@ def rob_courses(courses, interval=1):
 
 
 if __name__ == '__main__':
-    # courses list: (course_type, course_number, serial_number)
+    # courses list: (course_type, course_number, serial_number) or
+    # (new_course_type, new_course_number, new_serial_number, old_course_type, old_course_number, old_serial_number)
     courses = [
-        ('xwk', '60240013', '0'),
-        ('rx', '00510392', '91')
+        ('xx', '60240013', '0'),
+        ('rx', '00510392', '91'),
+        ('bx', '70240183', '2', 'bx', '70240183', '7')
     ]
     interval = 1
     rob_courses(courses, interval)

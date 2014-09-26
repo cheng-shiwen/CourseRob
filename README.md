@@ -18,7 +18,7 @@ A simple python program to rob courses that you expect, which can login and stop
 
 ## Usage
 
-First, modify `account info, academic year and semester` at line 17 to 19 and add courses you want to rob at line 114 in `courserob.py`.
+First, modify `account info, academic year and semester` at line 17 to 20 and add courses you want to rob or swap at line 166 in `courserob.py`.
 
 Then, run command
 
