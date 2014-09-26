@@ -1,7 +1,7 @@
 Course Rob
 =============
 
-A simple python program to rob courses that you expect to get using python urllib.
+A simple python program to rob courses that you expect, which can login and stop automatically.
 
 ## Requirements
 
