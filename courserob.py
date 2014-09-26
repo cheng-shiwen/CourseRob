@@ -47,6 +47,17 @@ def login():
         if login_success.search(login_html):
             break
 
+def is_rob_success(base_url, course_number, serial_number):
+    yx_url = base_url + '?m=yxSearchTab&p_xnxq=' + xnxq + '&tokenPriFlag=yx'
+    yx_html = urllib2.urlopen(yx_url).read()
+    # f_out = open('yx_course.html', 'w')
+    # f_out.write(yx_html)
+    # f_out.close()
+
+    token_regex = re.compile('<span>' + course_number + '</span>[\s\S]*?<span >' + serial_number + '</span>')
+    token_match = token_regex.search(yx_html)
+    return True if token_match else False
+
 def course_rob(course_type, course_number, serial_number):
     if course_type not in ['bx', 'xx', 'rx', 'xwk']:
         raise Exception('course_type error')
@@ -60,7 +71,7 @@ def course_rob(course_type, course_number, serial_number):
     # f_out.write(course_html)
     # f_out.close()
 
-    token_regex = re.compile('<input type="hidden" name="token" value="(.*?)">')
+    token_regex = re.compile('<input\s+?type="hidden"\s+?name="token"\s+?value="(.*?)">')
     token_match = token_regex.search(course_html)
     token_string = token_match.group(1)
     print course_type, course_number, serial_number, token_string
@@ -72,20 +83,37 @@ def course_rob(course_type, course_number, serial_number):
         'xwk': (('m', 'saveXwKc'), ('token', token_string), ('p_xnxq', xnxq), ('tokenPriFlag', 'xwk'), ('p_xwk_id', '%s;%s;%s;' % (xnxq, course_number, serial_number)))
     }
     course_req = urllib2.Request(base_url, urllib.urlencode(course_body[course_type]))
-    course_req _html = urllib2.urlopen(course_req).read()
+    course_req_html = urllib2.urlopen(course_req).read()
     # f_out = open(course_type + '_req.html', 'w')
     # f_out.write(course_req _html)
     # f_out.close()
 
-while True:
-    login()
+    return is_rob_success(base_url, course_number, serial_number)
+
+def rob_courses(courses, interval=1):
+    result = [False for course in courses]
+
     while True:
-        try:
-            # call function course_rob() to rob courses
+        login()
+        while True:
+            try:
+                if result.count(False) == 0:
+                    return
 
-            course_rob('rx', '00510392', '91')
-            time.sleep(1)
+                for idx, course in enumerate(courses):
+                    if not result[idx]:
+                        result[idx] = course_rob(course[0], course[1], course[2])
+                        time.sleep(interval)
+            except:
+                break
+        time.sleep(interval * len(courses))
 
-        except:
-            break
-    # time.sleep(30)
+
+if __name__ == '__main__':
+    # courses list: (course_type, course_number, serial_number)
+    courses = [
+        ('xwk', '60240013', '0'),
+        ('rx', '00510392', '91')
+    ]
+    interval = 1
+    rob_courses(courses, interval)
