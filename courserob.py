@@ -7,17 +7,13 @@ import cookielib
 import re
 import time
 from pytesser import *
+from conf import *
 
 cookies = urllib2.HTTPCookieProcessor(cookielib.CookieJar())
 opener = urllib2.build_opener(cookies)
 opener.addheaders = [('User-agent', 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.835.202 Safari/535.1')]
 urllib2.install_opener(opener)
 
-# account info, academic year and semester
-username = ''
-password = ''
-studentid = ''
-xnxq = ''       # e.g. '2013-2014-2'
 
 def login():
     pic_url = 'http://zhjwxk.cic.tsinghua.edu.cn/login-jcaptcah.jpg?captchaflag=login1'
@@ -37,7 +33,7 @@ def login():
         login_code = login_code.replace(']', 'J')
         print login_code, len(login_code)
 
-        body = (('j_username', username), ('j_password', password), ('captchaflag', 'login1'), ('_login_image_', login_code))
+        body = (('j_username', USERNAME), ('j_password', PASSWORD), ('captchaflag', 'login1'), ('_login_image_', login_code))
         req = urllib2.Request(post_url, urllib.urlencode(body))
         login_html = urllib2.urlopen(req).read()
 
@@ -55,7 +51,7 @@ def get_base_url(course_type):
            'http://zhjwxk.cic.tsinghua.edu.cn/xkYjs.vxkYjsXkbBs.do'
 
 def is_rob_success(base_url, course_number, serial_number):
-    yx_url = base_url + '?m=yxSearchTab&p_xnxq=' + xnxq + '&tokenPriFlag=yx'
+    yx_url = base_url + '?m=yxSearchTab&p_xnxq=' + XNXQ + '&tokenPriFlag=yx'
     yx_html = urllib2.urlopen(yx_url).read()
     # f_out = open('yx_course.html', 'w')
     # f_out.write(yx_html)
@@ -68,7 +64,7 @@ def is_rob_success(base_url, course_number, serial_number):
 def del_course(course_type, course_number, serial_number):
     base_url = get_base_url(course_type)
 
-    yx_url = base_url + '?m=yxSearchTab&p_xnxq=' + xnxq + '&tokenPriFlag=yx'
+    yx_url = base_url + '?m=yxSearchTab&p_xnxq=' + XNXQ + '&tokenPriFlag=yx'
     yx_html = urllib2.urlopen(yx_url).read()
     # f_out = open('yx_course.html', 'w')
     # f_out.write(yx_html)
@@ -79,7 +75,7 @@ def del_course(course_type, course_number, serial_number):
     token_string = token_match.group(1)
     print course_type, course_number, serial_number, token_string
 
-    body = (('m', 'deleteYxk'), ('token', token_string), ('p_xnxq', xnxq), ('tokenPriFlag', 'yx'), ('p_del_id', '%s;%s;%s;%s' % (xnxq, course_number, serial_number, studentid)))
+    body = (('m', 'deleteYxk'), ('token', token_string), ('p_xnxq', XNXQ), ('tokenPriFlag', 'yx'), ('p_del_id', '%s;%s;%s;%s' % (XNXQ, course_number, serial_number, STUDENTID)))
     course_req = urllib2.Request(base_url, urllib.urlencode(body))
     course_req_html = urllib2.urlopen(course_req).read()
     # f_out = open(course_type + '_req.html', 'w')
@@ -105,7 +101,7 @@ def rob_course(*course_info):
 
     base_url = get_base_url(course_type)
 
-    course_url = base_url + '?m=' + course_type + 'Search&p_xnxq=' + xnxq + '&tokenPriFlag=' + course_type
+    course_url = base_url + '?m=' + course_type + 'Search&p_xnxq=' + XNXQ + '&tokenPriFlag=' + course_type
     course_html = urllib2.urlopen(course_url).read()
     # f_out = open(course_type + '_course.html', 'w')
     # f_out.write(course_html)
@@ -126,10 +122,10 @@ def rob_course(*course_info):
         print 'course token: ', course_type, course_number, serial_number, token_string
 
         course_body = {
-            'bx': (('m', 'saveBxKc'), ('token', token_string), ('p_xnxq', xnxq), ('tokenPriFlag', 'bx'), ('p_bxk_id', '%s;%s;%s;' % (xnxq, course_number, serial_number))),
-            'xx': (('m', 'saveXxKc'), ('token', token_string), ('p_xnxq', xnxq), ('tokenPriFlag', 'xx'), ('p_xxk_id', '%s;%s;%s;' % (xnxq, course_number, serial_number))),
-            'rx': (('m', 'saveRxKc'), ('token', token_string), ('p_xnxq', xnxq), ('tokenPriFlag', 'rx'), ('p_rx_id', '%s;%s;%s;' % (xnxq, course_number, serial_number)), ('p_sort.asc1', 'true'), ('p_sort.asc2', 'true')),
-            'xwk': (('m', 'saveXwKc'), ('token', token_string), ('p_xnxq', xnxq), ('tokenPriFlag', 'xwk'), ('p_xwk_id', '%s;%s;%s;' % (xnxq, course_number, serial_number)))
+            'bx': (('m', 'saveBxKc'), ('token', token_string), ('p_xnxq', xnxq), ('tokenPriFlag', 'bx'), ('p_bxk_id', '%s;%s;%s;' % (XNXQ, course_number, serial_number))),
+            'xx': (('m', 'saveXxKc'), ('token', token_string), ('p_xnxq', XNXQ), ('tokenPriFlag', 'xx'), ('p_xxk_id', '%s;%s;%s;' % (XNXQ, course_number, serial_number))),
+            'rx': (('m', 'saveRxKc'), ('token', token_string), ('p_xnxq', XNXQ), ('tokenPriFlag', 'rx'), ('p_rx_id', '%s;%s;%s;' % (XNXQ, course_number, serial_number)), ('p_sort.asc1', 'true'), ('p_sort.asc2', 'true')),
+            'xwk': (('m', 'saveXwKc'), ('token', token_string), ('p_xnxq', XNXQ), ('tokenPriFlag', 'xwk'), ('p_xwk_id', '%s;%s;%s;' % (XNXQ, course_number, serial_number)))
         }
         course_req = urllib2.Request(base_url, urllib.urlencode(course_body[course_type]))
         course_req_html = urllib2.urlopen(course_req).read()
@@ -161,12 +157,4 @@ def rob_courses(courses, interval=1):
 
 
 if __name__ == '__main__':
-    # courses list: (course_type, course_number, serial_number) or
-    # (new_course_type, new_course_number, new_serial_number, old_course_type, old_course_number, old_serial_number)
-    courses = [
-        ('xx', '60240013', '0'),
-        ('rx', '00510392', '91'),
-        ('bx', '70240183', '2', 'bx', '70240183', '7')
-    ]
-    interval = 1
-    rob_courses(courses, interval)
+    rob_courses(COURSES, INTERVAL)
