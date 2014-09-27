@@ -122,7 +122,7 @@ def rob_course(*course_info):
         print 'course token: ', course_type, course_number, serial_number, token_string
 
         course_body = {
-            'bx': (('m', 'saveBxKc'), ('token', token_string), ('p_xnxq', xnxq), ('tokenPriFlag', 'bx'), ('p_bxk_id', '%s;%s;%s;' % (XNXQ, course_number, serial_number))),
+            'bx': (('m', 'saveBxKc'), ('token', token_string), ('p_xnxq', XNXQ), ('tokenPriFlag', 'bx'), ('p_bxk_id', '%s;%s;%s;' % (XNXQ, course_number, serial_number))),
             'xx': (('m', 'saveXxKc'), ('token', token_string), ('p_xnxq', XNXQ), ('tokenPriFlag', 'xx'), ('p_xxk_id', '%s;%s;%s;' % (XNXQ, course_number, serial_number))),
             'rx': (('m', 'saveRxKc'), ('token', token_string), ('p_xnxq', XNXQ), ('tokenPriFlag', 'rx'), ('p_rx_id', '%s;%s;%s;' % (XNXQ, course_number, serial_number)), ('p_sort.asc1', 'true'), ('p_sort.asc2', 'true')),
             'xwk': (('m', 'saveXwKc'), ('token', token_string), ('p_xnxq', XNXQ), ('tokenPriFlag', 'xwk'), ('p_xwk_id', '%s;%s;%s;' % (XNXQ, course_number, serial_number)))
